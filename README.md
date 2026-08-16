@@ -147,16 +147,6 @@ Worth naming these up front, both because they're true and because being able to
 - Swap the grid search for a proper optimizer (e.g., minimize max travel time via gradient-free local search around the best grid point)
 - Deploy it (Render/Railway for the backend, Vercel/Netlify for the frontend) and put a live link on the resume
 
-## Suggested resume bullet points
-
-Feel free to adapt one of these — pick whichever best matches the role you're applying for:
-
-> Built RouteMeet, a full-stack app that finds fair group meeting points using real driving-time data from the OSRM routing API, implementing a Rawlsian fairness objective (minimizing worst-case commute) alongside a traditional total-time optimization, with a batched many-to-many travel-time matrix query for efficiency.
-
-> Designed and implemented a travel-time-based optimization algorithm (as opposed to naive geographic midpoint) for a group meeting-point recommender, including unit and integration test coverage for the scoring logic using Node's built-in test runner and mocked external APIs.
-
-> Built a React + Node.js application integrating two external geospatial APIs (OpenStreetMap Nominatim, OSRM), with a documented, testable backend architecture separating geocoding, routing, and scoring concerns into independent services.
-
 ## License
 
 this is a portfolio project
