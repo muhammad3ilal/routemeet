@@ -159,4 +159,4 @@ Feel free to adapt one of these — pick whichever best matches the role you're 
 
 ## License
 
-MIT — this is a portfolio project, use it however's useful to you.
+this is a portfolio project
