@@ -13,8 +13,8 @@
 //
 // A grid is not the most sophisticated search strategy (a gradient
 // descent over travel time would converge faster), but it's easy to
-// reason about, easy to explain in an interview, and cheap enough
-// that a single OSRM table request can score the whole grid at once.
+// reason about and cheap enough that a single OSRM table request can
+// score the whole grid at once.
 
 /**
  * @param {Array<{lat:number, lon:number}>} origins

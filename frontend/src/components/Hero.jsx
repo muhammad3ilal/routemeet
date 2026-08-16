@@ -57,7 +57,7 @@ export default function Hero({ onLaunch, onLearnMore }) {
         </div>
 
         <div className="hero-content">
-          <span className="hero-eyebrow">Portfolio project</span>
+          <span className="hero-eyebrow">Fair meeting-point finder</span>
           <h1 className="hero-title">
             Meet in the middle.
             <br />

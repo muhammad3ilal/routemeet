@@ -4,14 +4,6 @@
 
 If four friends are coming from Washington DC, Arlington, Alexandria, and Fairfax, the geometric midpoint between their addresses is rarely a *fair* place to meet — it ignores roads, traffic patterns, and the fact that one person might get stuck with a 45-minute drive while everyone else drives 15. RouteMeet solves for travel time instead of straight-line distance, and optimizes for **fairness**, not just speed.
 
-## Why this project exists
-
-This started as a portfolio project to demonstrate full-stack engineering with a genuine algorithmic component, rather than another CRUD todo app. It combines:
-
-- **Geospatial APIs** — geocoding and real road-network routing
-- **An optimization problem with a real objective function** — not just sorting a list
-- **A meaningful design decision to explain in interviews** — fairness vs. efficiency tradeoffs
-
 ## How it works
 
 1. **Geocode** every person's starting address into coordinates (OpenStreetMap Nominatim).
@@ -22,7 +14,7 @@ This started as a portfolio project to demonstrate full-stack engineering with a
    - **Fastest total** (utilitarian objective): minimize the *combined* travel time across the group, even if that means one person drives noticeably more than others.
 5. **Reverse-geocode** the top few results into human-readable place names for display.
 
-Surfacing both rankings side by side is deliberate — it makes the fairness/efficiency tradeoff visible instead of hiding it behind a single "best" answer, which is a much more interesting product and algorithm decision to talk about in an interview than "we sorted by distance."
+Surfacing both rankings side by side is deliberate — it makes the fairness/efficiency tradeoff visible instead of hiding it behind a single "best" answer.
 
 ## Tech stack
 
@@ -30,11 +22,11 @@ Surfacing both rankings side by side is deliberate — it makes the fairness/eff
 |---|---|---|
 | Frontend | React (Vite) + Leaflet/react-leaflet | Fast dev loop, map rendering with OpenStreetMap tiles |
 | Backend | Node.js + Express | Simple REST API, orchestrates the geocoding/routing/scoring pipeline |
-| Geocoding | OpenStreetMap Nominatim (free, no API key) | No API key management required for a portfolio project |
+| Geocoding | OpenStreetMap Nominatim (free, no API key) | No API key management required |
 | Routing | OSRM `table` service (free public demo server) | Real road-network driving times, batched many-to-many in one request |
 | Testing | Node's built-in test runner (`node --test`) | Zero extra dependencies; unit tests for the scoring algorithm plus an integration test against mocked geocoding/routing servers |
 
-No database — the app is stateless by design, which kept the scope achievable while still being a legitimate full-stack, multi-service project.
+No database — the app is stateless by design.
 
 ## Project structure
 
@@ -132,8 +124,6 @@ Response (abbreviated):
 
 ## Known limitations / honest tradeoffs
 
-Worth naming these up front, both because they're true and because being able to discuss them is part of what makes this a good interview talking point:
-
 - **Grid search, not gradient-based optimization.** Sampling a 6×6 grid around the bounding box is simple and explainable but not the most sample-efficient way to search — a proper solver (e.g. minimizing a Rawlsian objective via gradient-free optimization like Nelder-Mead over the travel-time surface) would converge faster and could refine near the best candidate instead of a fixed grid.
 - **Driving only.** OSRM's public demo server only supports the driving profile; a "fair for everyone regardless of transit mode" version would need per-person mode of transport.
 - **No traffic/time-of-day awareness.** OSRM's free routing doesn't model live traffic, so "22 minutes" is a free-flow estimate, not a realistic Tuesday-at-5pm estimate.
@@ -145,7 +135,7 @@ Worth naming these up front, both because they're true and because being able to
 - Support walking/transit/biking modes per person
 - Let users save and share a computed meeting point via a shareable link
 - Swap the grid search for a proper optimizer (e.g., minimize max travel time via gradient-free local search around the best grid point)
-- Deploy it (Render/Railway for the backend, Vercel/Netlify for the frontend) and put a live link on the resume
+- Deploy it (Render/Railway for the backend, Vercel/Netlify for the frontend) with a live demo link
 
 ## License
 
