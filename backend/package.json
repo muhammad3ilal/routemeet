@@ -1,0 +1,19 @@
+{
+  "name": "routemeet-backend",
+  "version": "1.0.0",
+  "description": "RouteMeet API - fair meeting point optimizer based on real-world travel time",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
