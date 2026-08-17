@@ -42,7 +42,18 @@ function FitBounds({ points }) {
 
 export default function MapView({ origins, topCandidate }) {
   const venues = topCandidate?.venues || [];
-  const allPoints = topCandidate ? [...origins, topCandidate] : origins;
+  // When we found a real venue matching the requested activity, that's what
+  // the group should actually walk into -- not the abstract fairness-grid
+  // point, which can land a few hundred meters away on an unrelated street.
+  // The closest match (venues[0], pre-sorted by distance in the backend)
+  // becomes the winner pin; any others are shown as smaller secondary pins.
+  const nearestVenue = venues[0] || null;
+  const winnerPoint = nearestVenue
+    ? { lat: nearestVenue.lat, lon: nearestVenue.lon }
+    : topCandidate;
+  const secondaryVenues = nearestVenue ? venues.slice(1) : venues;
+
+  const allPoints = topCandidate ? [...origins, topCandidate, ...venues] : origins;
   const center = origins.length
     ? [origins[0].lat, origins[0].lon]
     : [38.9072, -77.0369];
@@ -57,8 +68,9 @@ export default function MapView({ origins, topCandidate }) {
       <div className="map-wrap">
         <MapContainer center={center} zoom={11} style={{ height: "420px", width: "100%" }}>
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            detectRetina
           />
           {origins.map((o, i) => (
             <Marker key={`origin-${i}`} position={[o.lat, o.lon]} icon={personIcons[i]}>
@@ -70,15 +82,15 @@ export default function MapView({ origins, topCandidate }) {
             </Marker>
           ))}
           {topCandidate && (
-            <Marker position={[topCandidate.lat, topCandidate.lon]} icon={winnerIcon}>
+            <Marker position={[winnerPoint.lat, winnerPoint.lon]} icon={winnerIcon}>
               <Popup>
-                <strong>Recommended meeting point</strong>
+                <strong>{nearestVenue ? nearestVenue.name : "Recommended meeting point"}</strong>
                 <br />
-                {topCandidate.placeName}
+                {nearestVenue ? `${topCandidate.placeName} area` : topCandidate.placeName}
               </Popup>
             </Marker>
           )}
-          {venues.map((v, i) => (
+          {secondaryVenues.map((v, i) => (
             <Marker key={`venue-${i}`} position={[v.lat, v.lon]} icon={venueIcon}>
               <Popup>
                 {v.name}
@@ -101,13 +113,13 @@ export default function MapView({ origins, topCandidate }) {
         {topCandidate && (
           <span className="legend-item legend-winner">
             <span className="legend-dot" />
-            Recommended point
+            {nearestVenue ? nearestVenue.name : "Recommended point"}
           </span>
         )}
-        {venues.length > 0 && (
+        {secondaryVenues.length > 0 && (
           <span className="legend-item legend-venue">
             <span className="legend-dot" />
-            Suggested spots
+            Other suggested spots
           </span>
         )}
       </div>
