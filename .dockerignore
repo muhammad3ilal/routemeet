@@ -1,0 +1,34 @@
+# Only application source and dependency manifests enter the build context.
+**
+!Dockerfile
+!backend/
+!backend/package.json
+!backend/package-lock.json
+!backend/*.js
+!backend/algorithms/
+!backend/algorithms/**
+!backend/providers/
+!backend/providers/**
+!backend/storage/
+!backend/storage/**
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/vite.config.*
+!frontend/src/
+!frontend/src/**
+!frontend/public/
+!frontend/public/**
+
+# Keep credentials and local databases out, even inside allowed directories.
+**/.env
+**/.env.*
+**/*.p8
+**/*.pem
+**/*.key
+**/*.sqlite
+**/*.sqlite-*
+**/node_modules
+**/.git
+**/dist

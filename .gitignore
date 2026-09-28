@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*
+!.env.example
+*.log
+.DS_Store
+backend/data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.p8
+*.pem
+*.key
+secrets/

@@ -1,0 +1,38 @@
+.category-results { scroll-margin-top: 24px; }
+.category-results .results-heading { scroll-margin-top: 24px; outline: none; }
+.category-coverage { font-size: 12px; color: var(--muted); margin: -4px 0 20px; max-width: 70ch; }
+.category-browse-controls { display: grid; gap: 16px; margin-bottom: 16px; }
+.category-browse-controls label { max-width: 520px; }
+.category-view-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.category-view-options button { font-size: 12px; border-color: var(--line); }
+.category-view-options button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.category-list-status { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; margin-bottom: 16px; font-size: 11px; color: var(--muted); }
+.category-place-dot { color: var(--accent); flex-shrink: 0; padding-top: 2px; }
+.category-place-select { flex-shrink: 0; font-size: 10px; color: var(--muted); padding-top: 4px; }
+.category-results .venue-select > span:nth-child(2) { overflow-wrap: anywhere; }
+.category-pick-label { display: inline-block; margin-top: 12px; color: var(--accent); font-size: 10px; border-bottom: 1px solid currentColor; padding-bottom: 3px; }
+.category-drive-gap { margin: 16px 0; font-size: 11px; color: var(--muted); }
+.category-comparison-state { font-size: 12px; color: var(--muted); margin: 20px 0 0; }
+.category-comparison-note { font-size: 12px; color: var(--accent); margin: 0 0 16px; }
+.category-no-results { padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.category-no-results p { font-size: 13px; }
+.category-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.category-pagination > label { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.category-pagination select { width: auto; min-width: 64px; margin: 0; }
+.category-pagination button { font-size: 12px; }
+.map-category-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; background: var(--paper); color: var(--ink); padding: 12px 16px; border-top: 1px solid var(--line); font-size: 10px; }
+.map-category-legend span { display: flex; align-items: center; gap: 5px; }
+.map-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #272925; }
+.map-legend-pick { background: #d8432e; }
+.map-legend-area { display: inline-block; width: 12px; height: 12px; border: 1px dashed #52685f; border-radius: 50%; }
+.live-map .selected-place-tooltip { width: max-content; max-width: min(230px, calc(100vw - 64px)); white-space: normal; overflow-wrap: anywhere; font-family: inherit; font-weight: 650; border: 1px solid #d8432e; border-radius: 3px; box-shadow: none; }
+.live-map .selected-venue-pin { font-size: 18px; }
+@media (max-width: 600px) {
+  .category-results .results-heading { align-items: start; gap: 12px; }
+  .category-results .results-heading > span { max-width: 92px; }
+  .category-place-select { display: none; }
+  .category-pagination { justify-content: center; }
+  .category-pagination > label { order: -1; width: 100%; justify-content: center; }
+  .category-pagination > button { flex: 1; }
+  .map-category-legend { font-size: 9px; gap: 5px 10px; }
+}

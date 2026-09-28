@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MapTiler setup · RouteMeet</title><style>body{font:16px/1.65 system-ui;color:#272925;background:#f5f4ef;max-width:820px;margin:40px auto;padding:0 24px}h1,h2{line-height:1.2}a{color:#a32f21}pre{white-space:pre-wrap;background:#e9e8e2;padding:16px}code{overflow-wrap:anywhere}a:focus-visible{outline:3px solid #d8432e}</style><a href="/">← Back to RouteMeet</a><h1>Connect MapTiler to RouteMeet</h1>
+<p>MapTiler provides street-map tiles and starting-place search. OpenStreetMap’s Overpass API provides category catalogs for the search area. OSRM provides the driving-time matrix and road geometry. RouteMeet&#x27;s custom optimizer ranks meeting places; SQLite stores saved groups. No Apple Developer account or Google Cloud project is needed.</p>
+<h2>1. Create your account and keys</h2>
+<p>Create an account at https://cloud.maptiler.com/ and open <strong>API keys</strong>. Create two keys so browser-origin restrictions do not break backend lookups:</p>
+<p>- <strong>Browser map key:</strong> in Allowed HTTP origins, enter <code>127.0.0.1</code> and <code>localhost</code> on separate lines, without protocol or port, for development. Use a separate production key restricted to your real domain; remove localhost rules from that key. This key is intentionally visible in the frontend bundle.</p>
+<p>- <strong>Server geocoding key:</strong> keep it only in the backend environment. Do not apply browser HTTP-origin restrictions to a server request that has no browser Origin/Referer. MapTiler recommends a dedicated backend key; browser-origin restrictions do not apply to this server-only use. Never include this key in a <code>VITE_</code> variable.</p>
+<p>The free plan is usage-limited and intended for testing, prototyping, personal or noncommercial projects. Check your dashboard&#x27;s current map-tile and geocoding allowances. Leaflet raster tiles are billed/counted as tile requests, not MapTiler SDK sessions. The required logo and attribution stay inside the map.</p>
+<h2>2. Add keys locally</h2>
+<p>Project folder: <code>/Users/muhammadbilal/Documents/2026-09-27/can/work/routemeet</code>.</p>
+<p>In <code>frontend/.env.local</code>, fill the existing blank line:</p>
+<pre><code>VITE_MAPTILER_KEY=your_browser_map_key</code></pre>
+<p>In <code>backend/.env</code>, fill:</p>
+<pre><code>MAPTILER_API_KEY=your_server_geocoding_key
+OSRM_URL=https://router.project-osrm.org</code></pre>
+<p>These local files are ignored by Git. Do not paste keys into chat. Old <code>APPLE_*</code> variables are ignored and can be removed; no Apple token signing or SDK remains in the active application.</p>
+<h2>3. Restart</h2>
+<p>Use Node.js 24 or later. Stop the existing backend and frontend, then run these in separate terminals from the project folder:</p>
+<pre><code>cd backend
+npm ci
+npm start</code></pre>
+<pre><code>cd frontend
+npm ci
+npm run dev</code></pre>
+<p>Open http://127.0.0.1:5173. A production frontend must be rebuilt after changing its browser key. Changing the backend key requires restarting the backend.</p>
+<h2>4. Check the connection</h2>
+<p>Select <strong>MapTiler</strong>. Enter a named landmark plus city for each person, press <strong>Search</strong>, and select the matching place. Choose <strong>Find places to meet</strong>. Select a result, then <strong>Show driving routes</strong>. The lines should follow roads. Choose Meet here to open an inline QR code and Apple Maps link for your phone.</p>
+<p>The code is covered by mocked provider tests; a real key acceptance test still needs your account. Example mode works without keys. Street maps need the browser key; search and comparison need the server key.</p>
+<h2>Routing and usage</h2>
+<p>OSRM&#x27;s public demo is a development convenience, with no key required. It has a maximum of one request per second and prohibits heavy use. RouteMeet serializes requests at least 1.1 seconds apart in its single backend process. For a public launch, configure <code>OSRM_URL</code> to your own OSRM server or a provider that supports its API and your expected usage. Multiple backend instances need a shared limiter. The demo service is not a production availability guarantee.</p>
+<p>Driving times do <strong>not</strong> include live traffic. Places without a driving route stay in the catalog, labeled as unavailable for driving comparison. No route is replaced with a straight-line guess.</p>
+<p>Backend defaults are 200 external requests and 2,000 origin–destination matrix elements per UTC day, persisted across restarts. Change <code>MAP_MAX_REQUESTS_PER_DAY</code> and <code>MAP_MAX_MATRIX_ELEMENTS_PER_DAY</code> in <code>backend/.env</code> as appropriate. These local guardrails are separate from MapTiler account quotas. Browser tile requests are not counted by the backend, so monitor MapTiler Cloud usage too.</p>
+<h2>Category coverage</h2>
+<p>The map and default list include all matching objects returned by the area category query, including unnamed mapped shops. Balanced recommendations are badges and an optional filter; they do not hide the rest of the catalog. Search names/addresses or page through the results. Change Search area to widen or narrow the circle around the meeting center.</p>
+<p>OpenStreetMap coverage is incomplete in some places; all returned mapped objects does not mean every real-world business. Closed/disused tags are excluded. Partial or timed-out catalog responses are reported as errors rather than labeled complete. Initial driving comparisons cover 32 central candidates; selecting another place requests its times separately. An unavailable routing service does not hide the catalog.</p>
+<p>Local development defaults to <code>OVERPASS_URL=https://overpass-api.de/api/interpreter</code>, with no API key. Category searches are serialized and response size is bounded. Public Overpass is shared infrastructure; configure your own or hosted endpoint before a public production rollout. See the <a href="https://dev.overpass-api.de/overpass-doc/en/preface/commons.html">Overpass usage guidance</a>.</p>
+<h2>Saved plans and troubleshooting</h2>
+<p>- Old Apple groups keep their names and typed starting places. Old travel limits are removed automatically. Loading one clears its old provider IDs; search and confirm the places again, then save a new group. Historical meetup choices remain visible but must be found again with MapTiler.</p>
+<p>- MapTiler feature IDs can change after reindexing. If a saved place is unavailable, search it again. The app never substitutes an unrelated place silently.</p>
+<p>- Search works but map does not: check the browser key, exact allowed origins, account quota and network connection.</p>
+<p>- Credential error: check the separate server key and its restrictions, then restart.</p>
+<p>- Routing unavailable: retry later or configure your own compatible OSRM endpoint.</p>
+<p>- Search expired: find places again; temporary results expire after ten minutes.</p>
+<p>References: <a href="https://docs.maptiler.com/guides/credentials/api-key/">API keys</a>, <a href="https://www.maptiler.com/cloud/pricing/">pricing</a>, <a href="https://docs.maptiler.com/cloud/api/geocoding/">geocoding</a>, <a href="https://docs.maptiler.com/leaflet/examples/raster-tiles-in-leaflet-js/">Leaflet raster maps</a>, <a href="https://project-osrm.org/docs/v5.24.0/api/">OSRM API</a>, <a href="https://routing.openstreetmap.de/about.html">public routing usage policy</a>.</p></html>

@@ -1,0 +1,79 @@
+name: routemeet
+
+services:
+  app:
+    image: routemeet:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_MAPTILER_KEY: ${VITE_MAPTILER_KEY:?Set the public browser key in deploy/.env.azure}
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: "4000"
+      DATABASE_PATH: /data/routemeet.sqlite
+      ALLOWED_ORIGINS: https://${APP_DOMAIN:?Set the public hostname in deploy/.env.azure}
+      MAPTILER_API_KEY: ${MAPTILER_API_KEY:?Set the server key in deploy/.env.azure}
+      OSRM_URL: ${OSRM_URL:-https://router.project-osrm.org}
+      OVERPASS_URL: ${OVERPASS_URL:-https://overpass-api.de/api/interpreter}
+      MAP_MAX_REQUESTS_PER_DAY: ${MAP_MAX_REQUESTS_PER_DAY:-200}
+      MAP_MAX_MATRIX_ELEMENTS_PER_DAY: ${MAP_MAX_MATRIX_ELEMENTS_PER_DAY:-2000}
+    volumes:
+      - app-data:/data
+    expose:
+      - "4000"
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 30s
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+          fetch("http://127.0.0.1:4000/api/health", {signal: AbortSignal.timeout(3000)})
+          .then(async response => process.exit(response.ok && (await response.json()).status === "ok" ? 0 : 1))
+          .catch(() => process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set the public hostname in deploy/.env.azure}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# These Docker volumes live on the VM's persistent disk. Do not place Docker's
+# data directory on an Azure temporary disk, an ephemeral OS disk, or Azure Files.
+# `docker compose down` preserves them; `down --volumes` deletes saved data.
+volumes:
+  app-data:
+    name: routemeet_data
+  caddy-data:
+    name: routemeet_caddy_data
+  caddy-config:
+    name: routemeet_caddy_config

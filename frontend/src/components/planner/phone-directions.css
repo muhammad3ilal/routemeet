@@ -1,0 +1,114 @@
+.phone-directions {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.phone-directions-choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.phone-directions-choice > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.phone-directions-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 208px;
+  gap: 24px;
+  margin-top: 20px;
+  padding: 24px;
+  background: var(--paper);
+  border-radius: 4px;
+}
+.phone-directions-content {
+  min-width: 0;
+}
+.phone-directions-content h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+.phone-directions-content > p {
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.phone-directions-content select {
+  margin-top: 8px;
+}
+.phone-directions-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 12px 0 16px;
+}
+.phone-directions-actions button,
+.phone-maps-link {
+  font-size: 12px;
+}
+.phone-maps-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+}
+.phone-directions-link-label {
+  margin-bottom: 8px;
+}
+.phone-directions-content input {
+  text-overflow: ellipsis;
+  font-size: 12px;
+  min-height: 44px;
+}
+.phone-directions-feedback p,
+.phone-directions-content > .phone-directions-note {
+  margin: 12px 0 0;
+  font-size: 12px;
+}
+.phone-route-code {
+  margin: 0;
+  width: 208px;
+  align-self: start;
+}
+.phone-route-code-image {
+  min-height: 208px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #171715;
+  border-radius: 4px;
+}
+.phone-route-code-image canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+.phone-route-code-image > span {
+  padding: 16px;
+  font-size: 12px;
+  text-align: center;
+}
+.phone-route-code figcaption {
+  margin-top: 8px;
+  font-size: 11px;
+  text-align: center;
+  color: var(--muted);
+}
+@media (max-width: 1100px) {
+  .phone-directions-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .phone-route-code {
+    justify-self: start;
+  }
+}
+@media (max-width: 480px) {
+  .phone-directions-panel {
+    padding: 16px;
+  }
+  .phone-directions-content input {
+    font-size: 16px;
+  }
+}
