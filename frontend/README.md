@@ -1,11 +1,5 @@
-# RouteMeet — frontend
+# RouteMeet frontend
 
-React + Vite frontend for RouteMeet. See the [root README](../README.md) for the full project overview, architecture, and setup instructions.
+The React interface for RouteMeet’s group planner, venue map, driving comparisons, and saved plans. Vite handles the build, Leaflet displays MapTiler tiles, and GSAP provides scroll animations with reduced-motion support.
 
-Quick start:
-```bash
-npm install
-npm run dev
-```
-
-Runs on `http://localhost:5173` and expects the backend at `http://localhost:4000` by default (override via `VITE_API_BASE_URL`, see `.env.example`).
+The [project overview](../README.md) describes the planner and its current scope.

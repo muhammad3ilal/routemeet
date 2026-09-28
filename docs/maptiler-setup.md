@@ -6,14 +6,14 @@ MapTiler provides street-map tiles and starting-place search. OpenStreetMap’s 
 
 Create an account at https://cloud.maptiler.com/ and open **API keys**. Create two keys so browser-origin restrictions do not break backend lookups:
 
-- **Browser map key:** in Allowed HTTP origins, enter `127.0.0.1` and `localhost` on separate lines, without protocol or port, for development. Use a separate production key restricted to your real domain; remove localhost rules from that key. This key is intentionally visible in the frontend bundle.
+- **Browser map key:** in Allowed HTTP origins, enter `127.0.0.1` and `localhost` on separate lines, without protocol or port, for development. This key is intentionally visible in the frontend bundle.
 - **Server geocoding key:** keep it only in the backend environment. Do not apply browser HTTP-origin restrictions to a server request that has no browser Origin/Referer. MapTiler recommends a dedicated backend key; browser-origin restrictions do not apply to this server-only use. Never include this key in a `VITE_` variable.
 
 The free plan is usage-limited and intended for testing, prototyping, personal or noncommercial projects. Check your dashboard's current map-tile and geocoding allowances. Leaflet raster tiles are billed/counted as tile requests, not MapTiler SDK sessions. The required logo and attribution stay inside the map.
 
 ## 2. Add keys locally
 
-Project folder: `/Users/muhammadbilal/Documents/2026-09-27/can/work/routemeet`.
+Paths below are relative to the repository root.
 
 In `frontend/.env.local`, fill the existing blank line:
 
@@ -28,7 +28,7 @@ MAPTILER_API_KEY=your_server_geocoding_key
 OSRM_URL=https://router.project-osrm.org
 ```
 
-These local files are ignored by Git. Do not paste keys into chat. Old `APPLE_*` variables are ignored and can be removed; no Apple token signing or SDK remains in the active application.
+These local files are ignored by Git. Old `APPLE_*` variables are ignored and can be removed; no Apple token signing or SDK remains in the active application.
 
 ## 3. Restart
 
@@ -46,17 +46,17 @@ npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. A production frontend must be rebuilt after changing its browser key. Changing the backend key requires restarting the backend.
+Open http://127.0.0.1:5173. Restart Vite after changing the browser key. Changing the backend key requires restarting the backend.
 
 ## 4. Check the connection
 
 Select **MapTiler**. Enter a named landmark plus city for each person, press **Search**, and select the matching place. Choose **Find places to meet**. Select a result, then **Show driving routes**. The lines should follow roads. Choose Meet here to open an inline QR code and Apple Maps link for your phone.
 
-The code is covered by mocked provider tests; a real key acceptance test still needs your account. Example mode works without keys. Street maps need the browser key; search and comparison need the server key.
+Provider tests use mocked responses. Example mode works without keys. Street maps need the browser key; search and comparison need the server key.
 
 ## Routing and usage
 
-OSRM's public demo is a development convenience, with no key required. It has a maximum of one request per second and prohibits heavy use. RouteMeet serializes requests at least 1.1 seconds apart in its single backend process. For a public launch, configure `OSRM_URL` to your own OSRM server or a provider that supports its API and your expected usage. Multiple backend instances need a shared limiter. The demo service is not a production availability guarantee.
+OSRM's public demo is a development convenience, with no key required. It has a maximum of one request per second and prohibits heavy use. RouteMeet serializes requests at least 1.1 seconds apart in its single backend process. This shared service can be unavailable or rate-limited.
 
 Driving times do **not** include live traffic. Places without a driving route stay in the catalog, labeled as unavailable for driving comparison. No route is replaced with a straight-line guess.
 
@@ -68,7 +68,7 @@ The map and default list include all matching objects returned by the area categ
 
 OpenStreetMap coverage is incomplete in some places; all returned mapped objects does not mean every real-world business. Closed/disused tags are excluded. Partial or timed-out catalog responses are reported as errors rather than labeled complete. Initial driving comparisons cover 32 central candidates; selecting another place requests its times separately. An unavailable routing service does not hide the catalog.
 
-Local development defaults to `OVERPASS_URL=https://overpass-api.de/api/interpreter`, with no API key. Category searches are serialized and response size is bounded. Public Overpass is shared infrastructure; configure your own or hosted endpoint before a public production rollout. See the [Overpass usage guidance](https://dev.overpass-api.de/overpass-doc/en/preface/commons.html).
+Local development defaults to `OVERPASS_URL=https://overpass-api.de/api/interpreter`, with no API key. Category searches are serialized and response size is bounded. Public Overpass is shared infrastructure and can be unavailable or rate-limited. See the [Overpass usage guidance](https://dev.overpass-api.de/overpass-doc/en/preface/commons.html).
 
 ## Saved plans and troubleshooting
 

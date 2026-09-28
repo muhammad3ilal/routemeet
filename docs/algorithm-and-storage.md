@@ -37,7 +37,7 @@ Groups are limited to 2–8 people within 300 km of each other. Geographic dista
 - A sorted O(C log C) Pareto comparison for longest drive and imbalance.
 - SQLite indexed owner-scoped reads, parameterized statements and transactional writes.
 
-Routes are fetched for the selected venue only. OSRM matrix dimensions and GeoJSON geometry are validated; null journeys stay unreachable instead of becoming straight-line guesses. Public OSRM demo requests are serialized with a 1.1-second minimum interval. Production needs its own routing arrangement and shared throttling if multiple backend processes run.
+Routes are fetched for the selected venue only. OSRM matrix dimensions and GeoJSON geometry are validated; null journeys stay unreachable instead of becoming straight-line guesses. Public OSRM demo requests are serialized with a 1.1-second minimum interval. Request throttling and active searches are scoped to one backend process.
 
 ## SQLite and saved data
 

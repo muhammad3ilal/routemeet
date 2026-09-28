@@ -1,51 +1,28 @@
 # RouteMeet
 
-For GitHub push commands and an Azure deployment that preserves the SQLite database, see [Deploy to Azure](docs/deploy-azure.md).
+RouteMeet helps groups find a place to meet with a reasonable drive for everyone. It compares travel times from each person’s starting point and highlights places that balance the journeys without sending the whole group on an unnecessary detour.
 
-Find a meeting place with balanced driving times for everyone. React + Vite, Express + Node 24, a custom meeting-place optimizer, SQLite, MapTiler maps/address search, OpenStreetMap category catalogs, and OSRM driving routes.
+## The planner
 
-## Run locally
+Groups of two to eight people can browse cafés, restaurants, parks, and other meeting spots within a shared search area. The map shows all places returned for the selected category, with search and pagination in the results list. Balanced recommendations appear alongside the full catalog.
 
-Use Node.js **24 or later**. Copy `backend/.env.example` to `backend/.env` and `frontend/.env.example` to `frontend/.env.local`. Leave the MapTiler values blank to use the clearly labeled example mode.
+Each compared place shows a driving estimate for every person. Groups and chosen destinations can be saved, and a selected destination can be opened in Apple Maps through a link or QR code. A reset clears the current plan while keeping saved plans.
 
-```sh
-cd backend
-npm ci
-npm start
-```
+## Meeting logic
 
-In another terminal:
+RouteMeet calculates a geographic search center, collects nearby venues, and compares driving times. Its ranking considers the longest journey, the difference between the shortest and longest journeys, and total travel time. A detour allowance prevents a distant venue from ranking well simply because everyone would spend equally long getting there.
 
-```sh
-cd frontend
-npm ci
-npm run dev
-```
+The initial comparison covers up to 32 central venues. Other places remain available and are compared when selected. Recommendations reflect the places checked; they are not a guarantee of the best possible destination across the entire area.
 
-Open http://localhost:5173 and choose **Try an example**, then **Find places to meet**. Example venues and travel times are fictional; the ranking and database are real. Save a named group, reload, and load it from **Saved plans**.
+## Built with
 
-For real maps, place search, ETAs, and road routing, follow [MapTiler setup](docs/maptiler-setup.md). Use separate browser and server credentials; never expose the server geocoding key in frontend code.
+- React, Vite, and GSAP for the interface and scroll animations.
+- Leaflet and MapTiler for maps and address search.
+- OpenStreetMap through Overpass for venue data, and OSRM for driving estimates and routes.
+- Node.js and Express for the API, with SQLite for saved groups, meetups, and request budgets.
 
-## What changed
+The custom search and ranking code uses geometric algorithms, hash maps, and a bounded heap. The [algorithm and storage notes](docs/algorithm-and-storage.md) describe the implementation.
 
-- Confirmed starting places, stable participant identities and explicit stale-result notices. No personal travel-limit setting.
-- Area-wide category catalogs with all returned places on the map, searchable paginated browsing, and a separate balanced recommendation layer.
-- MapTiler geocoding and Leaflet maps; Overpass category queries; OSRM driving matrices and road geometry. Estimates exclude live traffic.
-- SQLite groups, participants, saved meetup choices and daily request budgets.
-- Responsive planner, comparable travel bars, keyboard controls, and inline QR/copy/share controls for opening a chosen destination in Apple Maps.
+## Current scope
 
-See [algorithm and storage design](docs/algorithm-and-storage.md) for the formulas, complexity, schema, limits and honest optimization guarantees.
-
-## Validate
-
-```sh
-cd backend
-npm test
-cd ../frontend
-npm run lint
-npm run build
-```
-
-Provider tests use deterministic fixtures, not a live MapTiler account. Live credential acceptance and route accuracy must be checked after adding your credentials. Driving only; 2–8 people. All discovered venues remain browsable; 32 central candidates get initial travel comparisons, and any other place can be compared on selection. This is a local prototype, not yet a public service with account authentication or cross-device sync.
-
-`/api` is proxied by Vite to `127.0.0.1:4000`. The API binds to loopback. Production needs a same-origin HTTPS reverse proxy and a persistent backend/database; a static frontend deployment alone is insufficient.
+RouteMeet is a local project. It supports driving only, estimates exclude live traffic, and venue coverage depends on OpenStreetMap. Saved plans belong to the current browser; there are no user accounts or cross-device sync.
