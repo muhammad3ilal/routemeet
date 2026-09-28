@@ -1,28 +1,60 @@
 # RouteMeet
 
-RouteMeet helps groups find a place to meet with a reasonable drive for everyone. It compares travel times from each person’s starting point and highlights places that balance the journeys without sending the whole group on an unnecessary detour.
+RouteMeet helps groups choose a place to meet by comparing the drive from each person’s starting point. It highlights venues with balanced travel times while keeping the full set of mapped places available to browse.
 
-## The planner
+## Preview
 
-Groups of two to eight people can browse cafés, restaurants, parks, and other meeting spots within a shared search area. The map shows all places returned for the selected category, with search and pagination in the results list. Balanced recommendations appear alongside the full catalog.
+![RouteMeet’s planner showing starting places in Manassas and Fairfax, a map of nearby venues, and a selected café](docs/images/planner.png)
 
-Each compared place shows a driving estimate for every person. Groups and chosen destinations can be saved, and a selected destination can be opened in Apple Maps through a link or QR code. A reset clears the current plan while keeping saved plans.
+The planner supports two to eight people, category filters, individual driving estimates, saved groups, and Apple Maps links with QR codes for a chosen destination.
 
-## Meeting logic
+## Prerequisites
 
-RouteMeet calculates a geographic search center, collects nearby venues, and compares driving times. Its ranking considers the longest journey, the difference between the shortest and longest journeys, and total travel time. A detour allowance prevents a distant venue from ranking well simply because everyone would spend equally long getting there.
+- Node.js 24 or later and npm.
+- Git and a modern browser.
+- MapTiler API keys for live maps and address search. Example mode runs without keys.
 
-The initial comparison covers up to 32 central venues. Other places remain available and are compared when selected. Recommendations reflect the places checked; they are not a guarantee of the best possible destination across the entire area.
+The frontend uses React, Vite, Leaflet, and GSAP. The Express backend uses Node’s built-in SQLite support, so no separate database installation is needed. Live venue searches use OpenStreetMap through Overpass; driving estimates come from OSRM.
 
-## Built with
+## Installation
 
-- React, Vite, and GSAP for the interface and scroll animations.
-- Leaflet and MapTiler for maps and address search.
-- OpenStreetMap through Overpass for venue data, and OSRM for driving estimates and routes.
-- Node.js and Express for the API, with SQLite for saved groups, meetups, and request budgets.
+```sh
+git clone https://github.com/muhammad3ilal/routemeet.git
+cd routemeet
+npm ci --prefix backend
+npm ci --prefix frontend
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env.local
+```
 
-The custom search and ranking code uses geometric algorithms, hash maps, and a bounded heap. The [algorithm and storage notes](docs/algorithm-and-storage.md) describe the implementation.
+Leave the API keys blank for example mode. For live searches, add a server geocoding key to `MAPTILER_API_KEY` in `backend/.env` and a browser map key to `VITE_MAPTILER_KEY` in `frontend/.env.local`. Both files are ignored by Git. The [MapTiler setup guide](docs/maptiler-setup.md) covers key restrictions and provider settings.
 
-## Current scope
+## Quick start
 
-RouteMeet is a local project. It supports driving only, estimates exclude live traffic, and venue coverage depends on OpenStreetMap. Saved plans belong to the current browser; there are no user accounts or cross-device sync.
+From the repository root, start the backend:
+
+```sh
+npm start --prefix backend
+```
+
+In a second terminal, start the frontend:
+
+```sh
+npm run dev --prefix frontend
+```
+
+Open [localhost:5173](http://localhost:5173), choose **Try an example**, then **Find places to meet**. Example venues and travel times are fictional; they exercise the same ranking and saved-plan features.
+
+For a live search, choose **MapTiler**, confirm each person’s starting place, and select a category. Browse the results, compare drives, and choose **Meet here** to open the Apple Maps sharing options. Saved plans stay available after a reset.
+
+The ranking balances the longest drive, the gap between people’s journeys, and total travel time. Up to 32 central venues are compared initially; other venues are compared when selected. Driving estimates exclude live traffic, and venue coverage depends on OpenStreetMap. Saved plans are tied to the current browser, with no account system or cross-device sync.
+
+The [algorithm and storage notes](docs/algorithm-and-storage.md) explain the search geometry, ranking rules, data structures, and SQLite schema.
+
+## Contributing
+
+Bug reports and suggestions are welcome in [GitHub Issues](https://github.com/muhammad3ilal/routemeet/issues). Include the steps to reproduce a problem, what you expected, and what happened. Use public landmarks in examples and remove API keys or personal addresses from screenshots.
+
+## License
+
+No project-wide license has been added. Bundled GSAP code retains its [license notice](frontend/src/vendor/gsap/README.md), and the Archivo font includes its [SIL Open Font License](frontend/public/fonts/OFL.txt).
