@@ -4,7 +4,9 @@ RouteMeet helps groups choose a place to meet by comparing the drive from each p
 
 ## Preview
 
-![RouteMeet’s planner showing starting places in Manassas and Fairfax, a map of nearby venues, and a selected café](docs/images/planner.png)
+![RouteMeet’s planner with Washington, DC and Tysons Corner starting addresses, all returned café markers, and a 10 km search radius](docs/images/planner.png)
+
+Shown above: a coffee search between Union Station in Washington, DC and Tysons Corner Center, with all returned places plotted within a 10 km radius of the meeting center.
 
 The planner supports two to eight people, category filters, individual driving estimates, saved groups, and Apple Maps links with QR codes for a chosen destination.
 
