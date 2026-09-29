@@ -1,6 +1,6 @@
-# RouteMeet
+# Why Routemeet
 
-RouteMeet helps groups choose a place to meet by comparing the drive from each person’s starting point. It highlights venues with balanced travel times while keeping the full set of mapped places available to browse.
+Ever been in a situation where the group can't decide on where to meet? RouteMeet helps groups choose a place to meet by comparing the drive from each person’s starting point. It highlights venues with balanced travel times while keeping the full set of mapped places available to browse.
 
 ## Preview
 
